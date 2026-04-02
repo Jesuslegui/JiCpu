@@ -20,6 +20,9 @@ namespace JiCpu
         private Label lblSpeedValue;
         private Label lblTempValue;
 
+        // 🔥 RAM
+        private Label lblRamValue;
+
         private Timer timer1;
 
         protected override void Dispose(bool disposing)
@@ -47,10 +50,11 @@ namespace JiCpu
             lblThreadsValue = new Label();
             lblSpeedValue = new Label();
             lblTempValue = new Label();
+            lblRamValue = new Label();
 
             SuspendLayout();
 
-            // FORM (IMPORTANTE 👇)
+            // FORM
             this.BackColor = Color.White;
             this.ForeColor = Color.Black;
             this.Font = new Font("Segoe UI", 9);
@@ -74,14 +78,12 @@ namespace JiCpu
             grpCPU.Location = new Point(10, 10);
             grpCPU.Size = new Size(740, 200);
 
-            // LABEL TITLES
             AddLabel(grpCPU, "Name:", 20, 40);
             AddLabel(grpCPU, "Cores:", 20, 70);
             AddLabel(grpCPU, "Threads:", 20, 100);
             AddLabel(grpCPU, "Speed:", 20, 130);
             AddLabel(grpCPU, "Temperature:", 20, 160);
 
-            // VALUES
             SetupValueLabel(lblNameValue, 150, 40);
             SetupValueLabel(lblCoresValue, 150, 70);
             SetupValueLabel(lblThreadsValue, 150, 100);
@@ -96,9 +98,17 @@ namespace JiCpu
 
             tabCPU.Controls.Add(grpCPU);
 
-            // PLACEHOLDERS (luego metemos datos)
+            // 🔥 RAM TAB REAL
+            AddLabel(tabRAM, "Total RAM:", 20, 40);
+
+            lblRamValue.Location = new Point(150, 40);
+            lblRamValue.AutoSize = true;
+            lblRamValue.ForeColor = Color.DarkBlue;
+
+            tabRAM.Controls.Add(lblRamValue);
+
+            // PLACEHOLDERS
             AddLabel(tabGPU, "GPU info próximamente...", 20, 40);
-            AddLabel(tabRAM, "RAM info próximamente...", 20, 40);
             AddLabel(tabBoard, "Board info próximamente...", 20, 40);
 
             // TIMER
@@ -109,7 +119,6 @@ namespace JiCpu
             ClientSize = new Size(800, 450);
             Controls.Add(tabControl);
             Text = "JiCpu";
-
             Load += Form1_Load;
 
             ResumeLayout(false);
