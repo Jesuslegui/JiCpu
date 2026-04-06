@@ -1,4 +1,6 @@
-﻿using Timer = System.Windows.Forms.Timer;
+﻿using System.Windows.Forms;
+using System.Drawing;
+using Timer = System.Windows.Forms.Timer;
 
 namespace JiCpu
 {
@@ -29,6 +31,13 @@ namespace JiCpu
         private Label lblBoardSocketValue;
         private Label lblBoardChipsetValue;
         private Label lblBoardBusValue;
+        // 🎮 GPU
+        private GroupBox grpGPU;
+        private Label lblGpuNameValue;
+        private Label lblGpuMemoryValue;
+        private Label lblGpuDriverValue;
+        private Label lblGpuTempValue;
+
 
         private Timer timer1;
 
@@ -113,10 +122,33 @@ namespace JiCpu
             lblRamValue.ForeColor = Color.DarkBlue;
 
             tabRAM.Controls.Add(lblRamValue);
+            // 🎮 GROUP GPU
+            grpGPU = new GroupBox();
+            grpGPU.Text = "Graphics";
+            grpGPU.Location = new Point(10, 10);
+            grpGPU.Size = new Size(740, 200);
 
-            // PLACEHOLDERS
-            AddLabel(tabGPU, "GPU info próximamente...", 20, 40);
+            AddLabel(grpGPU, "Name:", 20, 40);
+            AddLabel(grpGPU, "Memory:", 20, 70);
+            AddLabel(grpGPU, "Driver:", 20, 100);
+            AddLabel(grpGPU, "Temperature:", 20, 130);
 
+            lblGpuNameValue = new Label();
+            lblGpuMemoryValue = new Label();
+            lblGpuDriverValue = new Label();
+            lblGpuTempValue = new Label();
+
+            SetupValueLabel(lblGpuNameValue, 150, 40);
+            SetupValueLabel(lblGpuMemoryValue, 150, 70);
+            SetupValueLabel(lblGpuDriverValue, 150, 100);
+            SetupValueLabel(lblGpuTempValue, 150, 130);
+
+            grpGPU.Controls.Add(lblGpuNameValue);
+            grpGPU.Controls.Add(lblGpuMemoryValue);
+            grpGPU.Controls.Add(lblGpuDriverValue);
+            grpGPU.Controls.Add(lblGpuTempValue);
+
+            tabGPU.Controls.Add(grpGPU);
             // MAINBOARD GROUP
             grpBoard = new GroupBox();
             grpBoard.Text = "Mainboard";

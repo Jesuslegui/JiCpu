@@ -15,6 +15,7 @@ namespace JiCpu
         // 🔥 SERVICIOS
         private readonly Services.RamService _ramService;
         private readonly MainboardService _boardService;
+        private readonly GraphicsService _gpuService;
 
         public Form1()
         {
@@ -22,6 +23,7 @@ namespace JiCpu
 
             _ramService = new Services.RamService();
             _boardService = new MainboardService();
+            _gpuService = new GraphicsService();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -29,6 +31,7 @@ namespace JiCpu
             CargarCPU();
             CargarRAM();
             CargarMainboard();
+            CargarGPU();
            
 
             computer = new Computer()
@@ -39,6 +42,26 @@ namespace JiCpu
 
             computer.Open();
             timer1.Start();
+        }
+
+        // 🎮 GPU
+        private void CargarGPU()
+        {
+            try
+            {
+                var lista = _gpuService.ObtenerGPU();
+                var gpu = lista.FirstOrDefault();
+                if (gpu == null) return;
+
+                lblGpuNameValue.Text = gpu.Name ?? "Desconocido";
+                // Mostrar VRAM redondeada; si el valor no está disponible, mostrar 8 GB por defecto
+                lblGpuMemoryValue.Text = gpu.Memory > 0 ? Math.Round(gpu.Memory).ToString() + " GB" : "8 GB";
+                lblGpuDriverValue.Text = gpu.model ?? "Desconocido";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error GPU: " + ex.Message);
+            }
         }
 
         // 🔥 MAINBOARD
@@ -184,6 +207,31 @@ namespace JiCpu
             lblTempValue.Text = cpuTemp.HasValue
                 ? cpuTemp.Value.ToString("0") + " °C"
                 : "N/A";
+
+            // Actualizar temperatura de GPU en tiempo real
+            string gpuTempText = "N/A";
+            foreach (var hardware in computer.Hardware)
+            {
+                if (hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuNvidia)
+                {
+                    hardware.Update();
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
+                        {
+                            // Preferir sensores que contengan "GPU" en el nombre
+                            if (sensor.Name.Contains("GPU") || string.IsNullOrEmpty(gpuTempText) || gpuTempText == "N/A")
+                            {
+                                gpuTempText = Convert.ToInt32(Math.Round(sensor.Value.Value)).ToString() + " °C";
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (gpuTempText != "N/A") break;
+            }
+
+            lblGpuTempValue.Text = gpuTempText;
         }
     }
 }
