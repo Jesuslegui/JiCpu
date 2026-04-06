@@ -1,5 +1,5 @@
 # JiCpu
-# JiCpu — Actualización 1.0.2
+# JiCpu — Actualización 1.0.3
 
 Versión: 1.0.1
 Licencia: MIT (libre para usar, modificar y distribuir)
@@ -8,12 +8,11 @@ Resumen
 -------
 Mejoras de interfaz y correcciones de servicios WMI. Se añadieron controles y se refactorizó la carga de módulos para ofrecer una apariencia consistente en las pestañas CPU, GPU, RAM y Mainboard.
 
-Principales cambios en 1.0.2
+Principales cambios en 1.0.3
 ---------------------------
  
 - Visual y UX:
- - Controles tipo "tarjeta" para módulos de hardware (ModuleCard/ModuleContainer).
- - Mejor disposición y estilos en las pestañas.
+-  Mejor disposición y estilos en las pestañas.
    
 - Código y correcciones:
   - `Servicios/RamService.cs` corregido para evitar errores de conversión y se mantiene bajo el namespace `Services`.
@@ -27,7 +26,9 @@ Principales cambios en 1.0.2
 Archivos añadidos/modificados
 ----------------------------
 - Añadidos:
-  - Mainboard `JiCpu/Servicios/MainboardService.cs` 
+  - Mainboard `JiCpu/Servicios/MainboardService.cs`
+  - Graphics `JiCpu/modelos/Graphics.cs`
+  - GraphicsServices `JiCpu/Servicios/GraphicsService.cs`
  
 - Modificados:
   - `JiCpu/Servicios/RamService.cs` — namespace `Services` y cambios para evitar errores de conversión.
@@ -35,7 +36,8 @@ Archivos añadidos/modificados
 
 Notas de diseño y extensión
 --------------------------
-- Para mostrar detalles extendidos al hacer clic en una tarjeta, se puede añadir un `Panel` lateral en `Form1` y mostrar/animar 
+- Para mostrar detalles extendidos al hacer clic en una tarjeta, se puede añadir un `Panel` lateral en `Form1` y mostrar/animar
+- se modifico el `Form1` para agregar los funciones de Graphics
 
 Correcciones y consideraciones
 -----------------------------
