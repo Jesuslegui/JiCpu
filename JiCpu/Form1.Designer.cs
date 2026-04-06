@@ -13,6 +13,7 @@ namespace JiCpu
         private TabPage tabBoard;
 
         private GroupBox grpCPU;
+        private GroupBox grpBoard;
 
         private Label lblNameValue;
         private Label lblCoresValue;
@@ -22,6 +23,12 @@ namespace JiCpu
 
         // 🔥 RAM
         private Label lblRamValue;
+        private Label lblBoardMarcaValue;
+        private Label lblBoardModeloValue;
+        private Label lblBoardPortsValue;
+        private Label lblBoardSocketValue;
+        private Label lblBoardChipsetValue;
+        private Label lblBoardBusValue;
 
         private Timer timer1;
 
@@ -109,7 +116,42 @@ namespace JiCpu
 
             // PLACEHOLDERS
             AddLabel(tabGPU, "GPU info próximamente...", 20, 40);
-            AddLabel(tabBoard, "Board info próximamente...", 20, 40);
+
+            // MAINBOARD GROUP
+            grpBoard = new GroupBox();
+            grpBoard.Text = "Mainboard";
+            grpBoard.Location = new Point(10, 10);
+            grpBoard.Size = new Size(740, 220);
+
+            AddLabel(grpBoard, "Manufacturer:", 20, 40);
+            AddLabel(grpBoard, "Model:", 20, 70);
+            AddLabel(grpBoard, "Slots:", 20, 100);
+            AddLabel(grpBoard, "Socket:", 20, 130);
+            AddLabel(grpBoard, "Chipset:", 20, 160);
+            AddLabel(grpBoard, "Bus:", 20, 190);
+
+            lblBoardMarcaValue = new Label();
+            lblBoardModeloValue = new Label();
+            lblBoardPortsValue = new Label();
+            lblBoardSocketValue = new Label();
+            lblBoardChipsetValue = new Label();
+            lblBoardBusValue = new Label();
+
+            SetupValueLabel(lblBoardMarcaValue, 150, 40);
+            SetupValueLabel(lblBoardModeloValue, 150, 70);
+            SetupValueLabel(lblBoardPortsValue, 150, 100);
+            SetupValueLabel(lblBoardSocketValue, 150, 130);
+            SetupValueLabel(lblBoardChipsetValue, 150, 160);
+            SetupValueLabel(lblBoardBusValue, 150, 190);
+
+            grpBoard.Controls.Add(lblBoardMarcaValue);
+            grpBoard.Controls.Add(lblBoardModeloValue);
+            grpBoard.Controls.Add(lblBoardPortsValue);
+            grpBoard.Controls.Add(lblBoardSocketValue);
+            grpBoard.Controls.Add(lblBoardChipsetValue);
+            grpBoard.Controls.Add(lblBoardBusValue);
+
+            tabBoard.Controls.Add(grpBoard);
 
             // TIMER
             timer1.Interval = 1000;
