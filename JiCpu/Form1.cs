@@ -2,6 +2,9 @@ using System;
 using System.Management;
 using System.Windows.Forms;
 using LibreHardwareMonitor.Hardware;
+using System.Linq;
+using System.Drawing;
+using JiCpu.Servicios;
 
 namespace JiCpu
 {
@@ -11,18 +14,25 @@ namespace JiCpu
 
         // 🔥 SERVICIOS
         private readonly Services.RamService _ramService;
+        private readonly MainboardService _boardService;
+        private readonly GraphicsService _gpuService;
 
         public Form1()
         {
             InitializeComponent();
 
             _ramService = new Services.RamService();
+            _boardService = new MainboardService();
+            _gpuService = new GraphicsService();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             CargarCPU();
             CargarRAM();
+            CargarMainboard();
+            CargarGPU();
+           
 
             computer = new Computer()
             {
@@ -32,6 +42,48 @@ namespace JiCpu
 
             computer.Open();
             timer1.Start();
+        }
+
+        // 🎮 GPU
+        private void CargarGPU()
+        {
+            try
+            {
+                var lista = _gpuService.ObtenerGPU();
+                var gpu = lista.FirstOrDefault();
+                if (gpu == null) return;
+
+                lblGpuNameValue.Text = gpu.Name ?? "Desconocido";
+                // Mostrar VRAM redondeada; si el valor no está disponible, mostrar 8 GB por defecto
+                lblGpuMemoryValue.Text = gpu.Memory > 0 ? Math.Round(gpu.Memory).ToString() + " GB" : "8 GB";
+                lblGpuDriverValue.Text = gpu.model ?? "Desconocido";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error GPU: " + ex.Message);
+            }
+        }
+
+        // 🔥 MAINBOARD
+        private void CargarMainboard()
+        {
+            try
+            {
+                var lista = _boardService.ObtenerInfo();
+                var mb = lista.FirstOrDefault();
+                if (mb == null) return;
+
+                lblBoardMarcaValue.Text = mb.Marca ?? "Desconocido";
+                lblBoardModeloValue.Text = mb.Modelo ?? "Desconocido";
+                lblBoardPortsValue.Text = mb.Port > 0 ? mb.Port.ToString() : "Desconocido";
+                lblBoardSocketValue.Text = mb.Socket ?? "Desconocido";
+                lblBoardChipsetValue.Text = mb.Chipset ?? "Desconocido";
+                lblBoardBusValue.Text = mb.Bus ?? "Desconocido";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Mainboard: " + ex.Message);
+            }
         }
 
         // 🔥 CPU (por ahora sigue aquí, luego lo pasas a service)
@@ -155,6 +207,31 @@ namespace JiCpu
             lblTempValue.Text = cpuTemp.HasValue
                 ? cpuTemp.Value.ToString("0") + " °C"
                 : "N/A";
+
+            // Actualizar temperatura de GPU en tiempo real
+            string gpuTempText = "N/A";
+            foreach (var hardware in computer.Hardware)
+            {
+                if (hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuNvidia)
+                {
+                    hardware.Update();
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Temperature && sensor.Value.HasValue)
+                        {
+                            // Preferir sensores que contengan "GPU" en el nombre
+                            if (sensor.Name.Contains("GPU") || string.IsNullOrEmpty(gpuTempText) || gpuTempText == "N/A")
+                            {
+                                gpuTempText = Convert.ToInt32(Math.Round(sensor.Value.Value)).ToString() + " °C";
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (gpuTempText != "N/A") break;
+            }
+
+            lblGpuTempValue.Text = gpuTempText;
         }
     }
 }

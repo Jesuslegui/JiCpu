@@ -1,4 +1,5 @@
-﻿using System.Management;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Management;
 
 namespace JiCpu.Servicios
 {
@@ -10,9 +11,9 @@ namespace JiCpu.Servicios
 
             foreach (var obj in searcher.Get())
             {
-                string name = obj["Name"]?.ToString();
-                string cores = obj["NumberOfCores"]?.ToString();
-                string threads = obj["NumberOfLogicalProcessors"]?.ToString();
+                string? name = obj["Name"]?.ToString();
+                string? cores = obj["NumberOfCores"]?.ToString();
+                string? threads = obj["NumberOfLogicalProcessors"]?.ToString();
 
                 double speedMHz = Convert.ToDouble(obj["MaxClockSpeed"]);
                 string speed = (speedMHz / 1000).ToString("0.00") + " GHz";
