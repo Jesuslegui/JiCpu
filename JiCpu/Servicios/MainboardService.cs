@@ -91,10 +91,13 @@ namespace JiCpu.Servicios
                 {
                     Marca = marca,
                     Modelo = string.IsNullOrEmpty(modelo) ? version : modelo,
+                    BiosModel = Bios,
                     Port = slotCount,
                     Socket = socket,
                     Chipset = chipset ?? version ?? "Desconocido",
-                    Bus = bus ?? "Desconocido"
+                    Bus = bus ?? "Desconocido",
+                    POD_slots = Slot
+                 
                 });
             }
 
